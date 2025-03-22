@@ -1,7 +1,10 @@
 import React from "react";
 
-const App: React.FC = () => {
-  return <h1>Hello, Sudoku!</h1>;
-};
+
+function App() {
+  return (
+   <div></div>
+  );
+}
 
 export default App;  
