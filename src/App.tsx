@@ -1,9 +1,11 @@
 import React from "react";
-
+import SudokuGrid from "./sudokuGrid";
 
 function App() {
   return (
-   <div></div>
+    <div  className="flex justify-center items-center h-screen">
+      <SudokuGrid/>
+    </div>
   );
 }
 
