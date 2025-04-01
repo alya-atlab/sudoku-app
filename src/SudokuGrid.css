@@ -14,6 +14,8 @@
   font-size: 20px;
   border: 1px solid #ccc;
   box-sizing: border-box;
+  background-color: white;
+  transition: background-color 0.2s;
 }
 
 .sudoku-cell:nth-child(9n + 3),
@@ -39,13 +41,8 @@
   overflow: hidden;
 }
 
-.sudoku-cell {
-  background-color: white;
-  transition: background-color 0.2s;
-}
-
 .sudoku-cell.focused {
-  background-color: #b3d9ff !important;
+  background-color: #8bc3fa !important;
   outline: none;
   border: 1px solid #ccc;
   box-sizing: border-box;
@@ -63,4 +60,37 @@
 .sudoku-cell.highlighted:nth-child(n + 19):nth-child(-n + 27),
 .sudoku-cell.highlighted:nth-child(n + 46):nth-child(-n + 54) {
   border-bottom: 2px solid black;
+}
+
+.sudoku-cell.correct {
+  color: #0037ec;
+}
+
+.sudoku-cell.incorrect {
+  color: #f44336;
+}
+
+.sudoku-cell.same-number {
+  background-color: #8bc3fa;
+}
+.sudoku-cell.conflict {
+  background-color: #e78695;
+}
+
+.game-message {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 24px;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.game-message.error {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.game-message.success {
+  background-color: #e8f5e9;
+  color: #2e7d32;
 }
