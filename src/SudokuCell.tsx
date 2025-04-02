@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface SudokuCellProps {
   value: number;
@@ -12,6 +12,8 @@ interface SudokuCellProps {
   isIncorrect: boolean;
   isConflict: boolean;
   sameNumber: boolean;
+  isHinted: boolean;
+  isSolved: boolean;
   onFocus: () => void;
   onBlur: () => void;
 }
@@ -28,25 +30,31 @@ const SudokuCell: React.FC<SudokuCellProps> = ({
   isIncorrect,
   isConflict,
   sameNumber,
+  isHinted,
+  isSolved,
   onFocus,
   onBlur,
 }) => {
   return (
     <input
       type="text"
-      value={value || ''}
+      value={value || ""}
       placeholder=" "
       title={`Cell ${row + 1}, ${col + 1}`}
-      onChange={(e) => onChange(row, col, e.target.value.replace(/[^1-9]/g, ''))}
+      onChange={(e) =>
+        onChange(row, col, e.target.value.replace(/[^1-9]/g, ""))
+      }
       className={`
         sudoku-cell
-        ${!isEditable ? 'prefilled' : ''}
-        ${isFocused ? 'focused' : ''}
-        ${isHighlighted ? 'highlighted' : ''}
-        ${isCorrect ? 'correct' : ''}
-        ${isIncorrect ? 'incorrect' : ''}
-        ${isConflict ? 'conflict' : ''}
-        ${sameNumber ? 'same-number' : ''}
+        ${!isEditable ? "prefilled" : ""}
+        ${isFocused ? "focused" : ""}
+        ${isHighlighted ? "highlighted" : ""}
+        ${isCorrect ? "correct" : ""}
+        ${isIncorrect ? "incorrect" : ""}
+        ${isConflict ? "conflict" : ""}
+        ${sameNumber ? "same-number" : ""}
+        ${isHinted ? "hinted" : ""}
+        ${isSolved ? "solved" : ""}
       `}
       onFocus={onFocus}
       onBlur={onBlur}
