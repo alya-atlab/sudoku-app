@@ -247,49 +247,20 @@ const SudokuGrid: React.FC<SudokuGridProps> = ({
 
   return (
     <div className="sudoku-container">
-      <div className="sudoku-stats">
-        {!isManualMode && (
-          <>
-            <div>Score: {score}</div>
-            <div>Mistakes: {mistakes}/3</div>
-            <div>
-              Time: {Math.floor(time / 60)}:
-              {(time % 60).toString().padStart(2, "0")}
-            </div>
-            <div>
-              Difficulty:{" "}
-              {difficulty!.charAt(0).toUpperCase() + difficulty!.slice(1)}
-            </div>
-            <div>Hints Left: {hintsRemaining}</div>
-            <button
-              onClick={handleHint}
-              disabled={hintsRemaining <= 0 || isSolving}
-              className="hint-button"
-            >
-              Hint ({hintsRemaining})
-            </button>
-          </>
-        )}
-
-        {isManualMode && (
-          <div className="solver-controls">
-            <button onClick={handleSolve} disabled={isSolving}>
-              {isSolving ? "Solving..." : "Solve"}
-            </button>
-            <button
-              onClick={handleHint}
-              disabled={hintsRemaining <= 0 || isSolving}
-              className="hint-button"
-            >
-              Hint
-            </button>
-          </div>
-        )}
-
-        <button onClick={onNewGame} className="new-game-button">
-          New Game
-        </button>
+      <div className="game-header">
+        <div className="score">Score: {score}</div>
+        <div className="stats-row">
+          <span className="mistakes-item">Mistakes: {mistakes}/3</span>
+          <span className="difficulty">{difficulty}</span>
+          <span className="timer">
+            {Math.floor(time / 60)
+              .toString()
+              .padStart(2, "0")}
+            :{(time % 60).toString().padStart(2, "0")}
+          </span>
+        </div>
       </div>
+
       <div className="sudoku-grid">
         {grid.map((row, rowIndex) =>
           row.map((cell, colIndex) => {
@@ -331,6 +302,38 @@ const SudokuGrid: React.FC<SudokuGridProps> = ({
             );
           })
         )}
+      </div>
+
+      <div className="game-controls">
+        {!isManualMode ? (
+          <button
+            onClick={handleHint}
+            disabled={hintsRemaining <= 0 || isSolving}
+            className="control-button hint-button"
+          >
+            Hint ({hintsRemaining})
+          </button>
+        ) : (
+          <div className="solver-controls">
+            <button
+              onClick={handleSolve}
+              disabled={isSolving}
+              className="control-button solve-button"
+            >
+              {isSolving ? "Solving..." : "Solve"}
+            </button>
+            <button
+              onClick={handleHint}
+              disabled={isSolving}
+              className="control-button hint-button"
+            >
+              Hint
+            </button>
+          </div>
+        )}
+        <button onClick={onNewGame} className="control-button new-game-button">
+          New Game
+        </button>
       </div>
 
       {isGameOver && <div className="game-message error">Game Over!</div>}

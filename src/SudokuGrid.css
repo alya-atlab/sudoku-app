@@ -31,37 +31,15 @@
 .sudoku-cell:nth-child(9n) {
   border-right: none;
 }
-
-.sudoku-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
-}
-
 .sudoku-cell.focused {
   background-color: #8bc3fa !important;
   outline: none;
   border: 1px solid #ccc;
-  box-sizing: border-box;
 }
 
 .sudoku-cell.highlighted {
   background-color: #f0f0f0;
 }
-
-.sudoku-cell.highlighted:nth-child(9n + 3),
-.sudoku-cell.highlighted:nth-child(9n + 6) {
-  border-right: 2px solid black;
-}
-
-.sudoku-cell.highlighted:nth-child(n + 19):nth-child(-n + 27),
-.sudoku-cell.highlighted:nth-child(n + 46):nth-child(-n + 54) {
-  border-bottom: 2px solid black;
-}
-
 .sudoku-cell.correct {
   color: #0037ec;
 }
@@ -73,10 +51,20 @@
 .sudoku-cell.same-number {
   background-color: #8bc3fa;
 }
+
 .sudoku-cell.conflict {
   background-color: #e78695;
 }
 
+.sudoku-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  flex-direction: column;
+}
 .game-message {
   margin-top: 20px;
   padding: 10px 20px;
@@ -94,17 +82,74 @@
   background-color: #e8f5e9;
   color: #2e7d32;
 }
-.new-game-button {
-  padding: 8px 16px;
-  background-color: #2196f3;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.game-header {
+  width: 350px;
+}
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 400px;
   font-size: 14px;
-  margin-top: 10px;
+  color: #555;
+}
+.stats-row span {
+  display: block;
+}
+.score {
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #0037ec;
 }
 
-.new-game-button:hover {
-  background-color: #1976d2;
+.mistakes {
+  text-align: left;
+}
+
+.difficulty {
+  text-align: center;
+  flex-grow: 1;
+}
+
+.timer {
+  text-align: right;
+}
+
+.game-controls {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.control-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.control-button:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.hint-button,
+.new-game-button {
+  color: white;
+}
+
+.hint-button {
+  background-color: #4caf50;
+}
+
+.hint-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.new-game-button {
+  background-color: #2196f3;
 }
