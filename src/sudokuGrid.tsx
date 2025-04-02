@@ -2,52 +2,14 @@ import React, { useState, useEffect } from 'react';
 import SudokuCell from './SudokuCell';
 import './SudokuGrid.css';
 
-const playSound = (correct: boolean) => {
-  const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-  const oscillator = audioContext.createOscillator();
-  const gainNode = audioContext.createGain();
+interface SudokuGridProps {
+  initialGrid: number[][];
+  solutionGrid: number[][];
+  onNewGame: () => void;
+}
 
-  oscillator.type = 'sine';
-  oscillator.frequency.value = correct ? 1200 : 600;
-  gainNode.gain.value = correct ? 0.05 : 0.1;
-  
-  const now = audioContext.currentTime;
-  gainNode.gain.setValueAtTime(gainNode.gain.value, now);
-  gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
-
-  oscillator.connect(gainNode);
-  gainNode.connect(audioContext.destination);
-  
-  oscillator.start();
-  oscillator.stop(now + 0.02);
-};
-
-const solutionGrid = [
-  [5, 3, 4, 6, 7, 8, 9, 1, 2],
-  [6, 7, 2, 1, 9, 5, 3, 4, 8],
-  [1, 9, 8, 3, 4, 2, 5, 6, 7],
-  [8, 5, 9, 7, 6, 1, 4, 2, 3],
-  [4, 2, 6, 8, 5, 3, 7, 9, 1],
-  [7, 1, 3, 9, 2, 4, 8, 5, 6],
-  [9, 6, 1, 5, 3, 7, 2, 8, 4],
-  [2, 8, 7, 4, 1, 9, 6, 3, 5],
-  [3, 4, 5, 2, 8, 6, 1, 7, 9]
-];
-
-const initialGrid = [
-  [5, 3, 0, 0, 7, 0, 0, 0, 0],
-  [6, 0, 0, 1, 9, 5, 0, 0, 0],
-  [0, 9, 8, 0, 0, 0, 0, 6, 0],
-  [8, 0, 0, 0, 6, 0, 0, 0, 3],
-  [4, 0, 0, 8, 0, 3, 0, 0, 1],
-  [7, 0, 0, 0, 2, 0, 0, 0, 6],
-  [0, 6, 0, 0, 0, 0, 2, 8, 0],
-  [0, 0, 0, 4, 1, 9, 0, 0, 5],
-  [0, 0, 0, 0, 8, 0, 0, 7, 9]
-];
-
-const SudokuGrid: React.FC = () => {
-  const [grid, setGrid] = useState<number[][]>(() => [...initialGrid]);
+const SudokuGrid: React.FC<SudokuGridProps> = ({ initialGrid, solutionGrid, onNewGame }) => {
+  const [grid, setGrid] = useState<number[][]>(() => initialGrid.map(row => [...row]));
   const [focusedCell, setFocusedCell] = useState<{ row: number; col: number } | null>(null);
   const [score, setScore] = useState(0);
   const [time, setTime] = useState(0);
@@ -56,14 +18,46 @@ const SudokuGrid: React.FC = () => {
   const [isCompleted, setIsCompleted] = useState(false);
   const [correctCells, setCorrectCells] = useState<Set<string>>(new Set());
   const [incorrectCells, setIncorrectCells] = useState<Set<string>>(new Set());
+  const [isEditable] = useState<boolean[][]>(() => 
+    initialGrid.map(row => row.map(cell => cell === 0))
+  );
 
-  const isEditable = initialGrid.map(row => row.map(cell => cell === 0));
+  useEffect(() => {
+    setGrid(initialGrid.map(row => [...row]));
+    setIsGameOver(false);
+    setIsCompleted(false);
+    setScore(0);
+    setTime(0);
+    setMistakes(0);
+    setCorrectCells(new Set());
+    setIncorrectCells(new Set());
+  }, [initialGrid]);
 
   useEffect(() => {
     if (isGameOver || isCompleted) return;
     const interval = setInterval(() => setTime(prev => prev + 1), 1000);
     return () => clearInterval(interval);
   }, [isGameOver, isCompleted]);
+
+  const playSound = (correct: boolean) => {
+    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+
+    oscillator.type = 'sine';
+    oscillator.frequency.value = correct ? 1200 : 600;
+    gainNode.gain.value = correct ? 0.05 : 0.1;
+    
+    const now = audioContext.currentTime;
+    gainNode.gain.setValueAtTime(gainNode.gain.value, now);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.start();
+    oscillator.stop(now + 0.02);
+  };
 
   const isValidMove = (row: number, col: number, value: number): boolean => {
     return value === solutionGrid[row][col];
@@ -146,7 +140,9 @@ const SudokuGrid: React.FC = () => {
         <div>Score: {score}</div>
         <div>Mistakes: {mistakes}/3</div>
         <div>Time: {Math.floor(time / 60)}:{(time % 60).toString().padStart(2, '0')}</div>
-        
+        <button onClick={onNewGame} className="new-game-button">
+          New Game
+        </button>
       </div>
 
       <div className="sudoku-grid">
